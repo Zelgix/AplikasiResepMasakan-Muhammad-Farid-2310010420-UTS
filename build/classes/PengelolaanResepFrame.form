@@ -302,6 +302,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="TAMBAH"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTambahActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnEdit">
           <Properties>
@@ -310,6 +313,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="EDIT"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnBersih">
           <Properties>
@@ -318,6 +324,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="BERSIHKAN FORM"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBersihActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -336,11 +345,9 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnImport" min="-2" pref="121" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lblPencarian" alignment="0" min="-2" pref="125" max="-2" attributes="0"/>
-                          <Component id="txtPencarian" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jScrollPane3" alignment="0" pref="382" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="lblPencarian" alignment="0" min="-2" pref="125" max="-2" attributes="0"/>
+                      <Component id="txtPencarian" alignment="0" min="-2" pref="382" max="-2" attributes="0"/>
+                      <Component id="jScrollPane3" alignment="0" min="-2" pref="410" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -376,6 +383,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPencarian">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPencarianKeyReleased"/>
+          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane3">
           <AuxValues>
@@ -384,7 +394,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="jTable1">
+            <Component class="javax.swing.JTable" name="tblResep">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="4">
@@ -395,6 +405,9 @@
                   </Table>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblResepMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -405,6 +418,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="HAPUS"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHapusActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnExport">
           <Properties>
@@ -413,6 +429,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="EXPORT"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnImport">
           <Properties>
@@ -421,6 +440,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="IMPORT"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImportActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
