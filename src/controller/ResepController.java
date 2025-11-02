@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ResepController {
-    private ResepDAO resepDAO;
+      private ResepDAO resepDAO;
     
     public ResepController() {
         resepDAO = new ResepDAO();
@@ -23,19 +23,19 @@ public class ResepController {
     
     // Method menambah resep
     public void addResep(String namaResep, String kategori, String bahan, 
-                        String langkah, String waktuMasak, String tingkatKesulitan) 
-                        throws SQLException {
+                        String langkah, String waktuMasak, String tingkatKesulitan,
+                        int rating, boolean isFavorit) throws SQLException {
         Resep resep = new Resep(0, namaResep, kategori, bahan, langkah, 
-                               waktuMasak, tingkatKesulitan);
+                               waktuMasak, tingkatKesulitan, rating, isFavorit);
         resepDAO.addResep(resep);
     }
     
     // Method mengupdate resep
     public void updateResep(int id, String namaResep, String kategori, String bahan, 
-                           String langkah, String waktuMasak, String tingkatKesulitan) 
-                           throws SQLException {
+                           String langkah, String waktuMasak, String tingkatKesulitan,
+                           int rating, boolean isFavorit) throws SQLException {
         Resep resep = new Resep(id, namaResep, kategori, bahan, langkah, 
-                               waktuMasak, tingkatKesulitan);
+                               waktuMasak, tingkatKesulitan, rating, isFavorit);
         resepDAO.updateResep(resep);
     }
     
@@ -47,6 +47,16 @@ public class ResepController {
     // Method pencarian resep
     public List<Resep> searchResep(String keyword) throws SQLException {
         return resepDAO.searchResep(keyword);
+    }
+    
+    // BARU: Method ambil resep favorit
+    public List<Resep> getFavoriteResep() throws SQLException {
+        return resepDAO.getFavoriteResep();
+    }
+    
+    // BARU: Method ambil resep rating tertinggi
+    public List<Resep> getTopRatedResep() throws SQLException {
+        return resepDAO.getTopRatedResep();
     }
     
     // Method mengecek duplikasi

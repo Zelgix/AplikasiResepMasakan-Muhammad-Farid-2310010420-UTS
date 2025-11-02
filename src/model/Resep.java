@@ -8,18 +8,22 @@ package model;
  *
  * @author USER
  */
+
 public class Resep {
-     private int id;
+    private int id;
     private String namaResep;
     private String kategori;
     private String bahan;
     private String langkah;
     private String waktuMasak;
     private String tingkatKesulitan;
+    private int rating;
+    private boolean isFavorit;
     
     // Constructor
     public Resep(int id, String namaResep, String kategori, String bahan, 
-                 String langkah, String waktuMasak, String tingkatKesulitan) {
+                 String langkah, String waktuMasak, String tingkatKesulitan,
+                 int rating, boolean isFavorit) {
         this.id = id;
         this.namaResep = namaResep;
         this.kategori = kategori;
@@ -27,6 +31,8 @@ public class Resep {
         this.langkah = langkah;
         this.waktuMasak = waktuMasak;
         this.tingkatKesulitan = tingkatKesulitan;
+        this.rating = rating;
+        this.isFavorit = isFavorit;
     }
     
     // Getters dan Setters
@@ -84,5 +90,21 @@ public class Resep {
     
     public void setTingkatKesulitan(String tingkatKesulitan) {
         this.tingkatKesulitan = tingkatKesulitan;
+    }
+    
+    public int getRating() {
+        return rating;
+    }
+    
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+    
+    public boolean isFavorit() {
+        return isFavorit;
+    }
+    
+    public void setFavorit(boolean favorit) {
+        this.isFavorit = favorit;
     }
 }

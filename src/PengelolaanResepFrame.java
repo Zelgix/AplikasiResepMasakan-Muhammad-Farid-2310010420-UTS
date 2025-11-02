@@ -24,30 +24,49 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     public PengelolaanResepFrame() {
         initComponents();
         controller = new ResepController();
-        model = new DefaultTableModel(
-            new String[]{"No", "Nama Resep", "Kategori", "Waktu", "Kesulitan"}, 0
-        );
+         model = new DefaultTableModel(
+        new String[]{"No", "Nama Resep", "Kategori", "Waktu", "Kesulitan", "Rating", "Favorit"}, 0
+    );
         tblResep.setModel(model);
         loadResep();
     }
     private void loadResep() {
-        try {
-            model.setRowCount(0);
-            List<Resep> resepList = controller.getAllResep();
-            int rowNumber = 1;
-            for (Resep resep : resepList) {
-                model.addRow(new Object[]{
-                    rowNumber++,
-                    resep.getNamaResep(),
-                    resep.getKategori(),
-                    resep.getWaktuMasak() + " menit",
-                    resep.getTingkatKesulitan()
-                });
-            }
-        } catch (SQLException e) {
-            showError(e.getMessage());
+         try {
+        model.setRowCount(0);
+        List<Resep> resepList = controller.getAllResep();
+        int rowNumber = 1;
+        for (Resep resep : resepList) {
+            // Format rating dengan bintang
+            String ratingStr = getRatingStars(resep.getRating());
+            
+            // Format favorit dengan icon
+            String favoritStr = resep.isFavorit() ? "❤" : "-";
+            
+            model.addRow(new Object[]{
+                rowNumber++,
+                resep.getNamaResep(),
+                resep.getKategori(),
+                resep.getWaktuMasak() + " menit",
+                resep.getTingkatKesulitan(),
+                ratingStr,
+                favoritStr
+            });
         }
+    } catch (SQLException e) {
+        showError(e.getMessage());
     }
+}
+
+// Helper method untuk format rating
+private String getRatingStars(int rating) {
+    if (rating == 0) return "Belum dirating";
+    StringBuilder stars = new StringBuilder();
+    for (int i = 0; i < rating; i++) {
+        stars.append("⭐");
+    }
+    return stars.toString() + " (" + rating + ")";
+}
+ 
     
     private void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", 
@@ -55,76 +74,89 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     }
     
     private void addResep() {
-        String namaResep = txtNamaResep.getText().trim();
-        String kategori = (String) cmbKategori.getSelectedItem();
-        String bahan = txtBahan.getText().trim();
-        String langkah = txtLangkah.getText().trim();
-        String waktuMasak = txtWaktuMasak.getText().trim();
-        String tingkatKesulitan = (String) cmbKesulitan.getSelectedItem();
-        
-        // Validasi input
-        if (namaResep.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nama resep tidak boleh kosong!", 
-                                         "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        if (bahan.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Bahan-bahan tidak boleh kosong!", 
-                                         "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        if (langkah.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Langkah-langkah tidak boleh kosong!", 
-                                         "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        if (!waktuMasak.isEmpty() && !waktuMasak.matches("\\d+")) {
-            JOptionPane.showMessageDialog(this, "Waktu masak harus berupa angka!", 
-                                         "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        try {
-            // Cek duplikasi nama resep
-            if (controller.isDuplicateResep(namaResep, null)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Resep dengan nama ini sudah ada!", 
-                    "Peringatan", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            controller.addResep(namaResep, kategori, bahan, langkah, 
-                               waktuMasak, tingkatKesulitan);
-            loadResep();
-            clearForm();
-            JOptionPane.showMessageDialog(this, "Resep berhasil ditambahkan!");
-        } catch (SQLException ex) {
-            showError("Gagal menambahkan resep: " + ex.getMessage());
-        }
+       String namaResep = txtNamaResep.getText().trim();
+    String kategori = (String) cmbKategori.getSelectedItem();
+    String bahan = txtBahan.getText().trim();
+    String langkah = txtLangkah.getText().trim();
+    String waktuMasak = txtWaktuMasak.getText().trim();
+    String tingkatKesulitan = (String) cmbKesulitan.getSelectedItem();
+    
+    // BARU: Ambil rating dan favorit
+    int rating = (Integer) SpinnerRating.getValue();
+    boolean isFavorit = chkFavorit.isSelected();
+    
+    // Validasi input
+    if (namaResep.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Nama resep tidak boleh kosong!", 
+                                     "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
     }
     
-    private void clearForm() {
-        txtNamaResep.setText("");
-        txtBahan.setText("");
-        txtLangkah.setText("");
-        txtWaktuMasak.setText("");
-        cmbKategori.setSelectedIndex(0);
-        cmbKesulitan.setSelectedIndex(0);
+    if (bahan.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Bahan-bahan tidak boleh kosong!", 
+                                     "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
     }
     
-    private void editResep() {
-        int selectedRow = tblResep.getSelectedRow();
-        if (selectedRow == -1) {
+    if (langkah.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Langkah-langkah tidak boleh kosong!", 
+                                     "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (!waktuMasak.isEmpty() && !waktuMasak.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "Waktu masak harus berupa angka!", 
+                                     "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        // Cek duplikasi nama resep
+        if (controller.isDuplicateResep(namaResep, null)) {
             JOptionPane.showMessageDialog(this, 
-                "Pilih resep yang ingin diperbarui!", 
+                "Resep dengan nama ini sudah ada!", 
                 "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        int id = selectedRow + 1; // ID sama dengan nomor urut
+        // UPDATE: Tambah parameter rating dan isFavorit
+        controller.addResep(namaResep, kategori, bahan, langkah, 
+                           waktuMasak, tingkatKesulitan, rating, isFavorit);
+        loadResep();
+        clearForm();
+        JOptionPane.showMessageDialog(this, "Resep berhasil ditambahkan!");
+    } catch (SQLException ex) {
+        showError("Gagal menambahkan resep: " + ex.getMessage());
+    }
+    }
+    
+    private void clearForm() {
+         txtNamaResep.setText("");
+    txtBahan.setText("");
+    txtLangkah.setText("");
+    txtWaktuMasak.setText("");
+    cmbKategori.setSelectedIndex(0);
+    cmbKesulitan.setSelectedIndex(0);
+    
+    // BARU: Reset rating dan favorit
+    SpinnerRating.setValue(0);
+    chkFavorit.setSelected(false);
+    }
+    
+    private void editResep() {
+        int selectedRow = tblResep.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, 
+            "Pilih resep yang ingin diperbarui!", 
+            "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        List<Resep> resepList = controller.getAllResep();
+        Resep resep = resepList.get(selectedRow);
+        int id = resep.getId();
+        
         String namaResep = txtNamaResep.getText().trim();
         String kategori = (String) cmbKategori.getSelectedItem();
         String bahan = txtBahan.getText().trim();
@@ -132,7 +164,11 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
         String waktuMasak = txtWaktuMasak.getText().trim();
         String tingkatKesulitan = (String) cmbKesulitan.getSelectedItem();
         
-        // Validasi sama seperti tambah
+        // BARU: Ambil rating dan favorit
+        int rating = (Integer) SpinnerRating.getValue();
+        boolean isFavorit = chkFavorit.isSelected();
+        
+        // Validasi
         if (namaResep.isEmpty() || bahan.isEmpty() || langkah.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
                 "Semua field wajib diisi!", 
@@ -147,39 +183,44 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
             return;
         }
         
-        try {
-            // Cek duplikasi (exclude ID yang sedang diedit)
-            if (controller.isDuplicateResep(namaResep, id)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Resep dengan nama ini sudah ada!", 
-                    "Peringatan", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            controller.updateResep(id, namaResep, kategori, bahan, langkah, 
-                                  waktuMasak, tingkatKesulitan);
-            loadResep();
-            clearForm();
-            JOptionPane.showMessageDialog(this, "Resep berhasil diperbarui!");
-        } catch (SQLException ex) {
-            showError("Gagal memperbarui resep: " + ex.getMessage());
+        // Cek duplikasi (exclude ID yang sedang diedit)
+        if (controller.isDuplicateResep(namaResep, id)) {
+            JOptionPane.showMessageDialog(this, 
+                "Resep dengan nama ini sudah ada!", 
+                "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        
+        // UPDATE: Tambah parameter rating dan isFavorit
+        controller.updateResep(id, namaResep, kategori, bahan, langkah, 
+                              waktuMasak, tingkatKesulitan, rating, isFavorit);
+        loadResep();
+        clearForm();
+        JOptionPane.showMessageDialog(this, "Resep berhasil diperbarui!");
+    } catch (SQLException ex) {
+        showError("Gagal memperbarui resep: " + ex.getMessage());
+    }
     }
     
     private void populateForm(int selectedRow) {
         try {
-            List<Resep> resepList = controller.getAllResep();
-            Resep resep = resepList.get(selectedRow);
-            
-            txtNamaResep.setText(resep.getNamaResep());
-            cmbKategori.setSelectedItem(resep.getKategori());
-            txtBahan.setText(resep.getBahan());
-            txtLangkah.setText(resep.getLangkah());
-            txtWaktuMasak.setText(resep.getWaktuMasak());
-            cmbKesulitan.setSelectedItem(resep.getTingkatKesulitan());
-        } catch (SQLException ex) {
-            showError("Gagal mengambil data: " + ex.getMessage());
-        }
+        List<Resep> resepList = controller.getAllResep();
+        Resep resep = resepList.get(selectedRow);
+        
+        txtNamaResep.setText(resep.getNamaResep());
+        cmbKategori.setSelectedItem(resep.getKategori());
+        txtBahan.setText(resep.getBahan());
+        txtLangkah.setText(resep.getLangkah());
+        txtWaktuMasak.setText(resep.getWaktuMasak());
+        cmbKesulitan.setSelectedItem(resep.getTingkatKesulitan());
+        
+        // BARU: Set rating dan favorit
+        SpinnerRating.setValue(resep.getRating());
+        chkFavorit.setSelected(resep.isFavorit());
+        
+    } catch (SQLException ex) {
+        showError("Gagal mengambil data: " + ex.getMessage());
+    }
     }
     
     private void deleteResep() {
@@ -216,37 +257,108 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     
     private void searchResep() {
         String keyword = txtPencarian.getText().trim();
-        
-        if (keyword.isEmpty()) {
-            loadResep(); // Tampilkan semua jika kosong
-            return;
-        }
-        
-        try {
-            model.setRowCount(0);
-            List<Resep> resepList = controller.searchResep(keyword);
-            int rowNumber = 1;
-            
-            for (Resep resep : resepList) {
-                model.addRow(new Object[]{
-                    rowNumber++,
-                    resep.getNamaResep(),
-                    resep.getKategori(),
-                    resep.getWaktuMasak() + " menit",
-                    resep.getTingkatKesulitan()
-                });
-            }
-            
-            if (resepList.isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "Tidak ada resep ditemukan untuk: " + keyword,
-                    "Hasil Pencarian", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (SQLException ex) {
-            showError("Gagal melakukan pencarian: " + ex.getMessage());
-        }
+    
+    if (keyword.isEmpty()) {
+        loadResep(); // Tampilkan semua jika kosong
+        return;
     }
+    
+    try {
+        model.setRowCount(0);
+        List<Resep> resepList = controller.searchResep(keyword);
+        int rowNumber = 1;
+        
+        for (Resep resep : resepList) {
+            String ratingStr = getRatingStars(resep.getRating());
+            String favoritStr = resep.isFavorit() ? "❤" : "-";
+            
+            model.addRow(new Object[]{
+                rowNumber++,
+                resep.getNamaResep(),
+                resep.getKategori(),
+                resep.getWaktuMasak() + " menit",
+                resep.getTingkatKesulitan(),
+                ratingStr,
+                favoritStr
+            });
+        }
+        
+        if (resepList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Tidak ada resep ditemukan untuk: " + keyword,
+                "Hasil Pencarian", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (SQLException ex) {
+        showError("Gagal melakukan pencarian: " + ex.getMessage());
+    }
+    }
+    
+    // Method untuk filter favorit
+private void filterFavorit() {
+    try {
+        model.setRowCount(0);
+        List<Resep> resepList = controller.getFavoriteResep();
+        int rowNumber = 1;
+        
+        for (Resep resep : resepList) {
+            String ratingStr = getRatingStars(resep.getRating());
+            String favoritStr = "❤";
+            
+            model.addRow(new Object[]{
+                rowNumber++,
+                resep.getNamaResep(),
+                resep.getKategori(),
+                resep.getWaktuMasak() + " menit",
+                resep.getTingkatKesulitan(),
+                ratingStr,
+                favoritStr
+            });
+        }
+        
+        if (resepList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Belum ada resep favorit!",
+                "Info", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (SQLException ex) {
+        showError("Gagal menampilkan resep favorit: " + ex.getMessage());
+    }
+}
+
+// Method untuk filter rating tertinggi
+private void filterRatingTertinggi() {
+    try {
+        model.setRowCount(0);
+        List<Resep> resepList = controller.getTopRatedResep();
+        int rowNumber = 1;
+        
+        for (Resep resep : resepList) {
+            String ratingStr = getRatingStars(resep.getRating());
+            String favoritStr = resep.isFavorit() ? "❤" : "-";
+            
+            model.addRow(new Object[]{
+                rowNumber++,
+                resep.getNamaResep(),
+                resep.getKategori(),
+                resep.getWaktuMasak() + " menit",
+                resep.getTingkatKesulitan(),
+                ratingStr,
+                favoritStr
+            });
+        }
+        
+        if (resepList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Belum ada resep dengan rating!",
+                "Info", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (SQLException ex) {
+        showError("Gagal menampilkan resep rating tertinggi: " + ex.getMessage());
+    }
+}
     
     private void showCSVGuide() {
         String guideMessage = 
@@ -409,7 +521,7 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
                     // Simpan ke database
                     try {
                         controller.addResep(namaResep, kategori, bahan, langkah, 
-                                          waktuMasak, tingkatKesulitan);
+                  waktuMasak, tingkatKesulitan, 0, false);
                         successCount++;
                     } catch (SQLException ex) {
                         errorCount++;
@@ -601,6 +713,9 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
         btnTambah = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnBersih = new javax.swing.JButton();
+        SpinnerRating = new javax.swing.JSpinner();
+        chkFavorit = new javax.swing.JCheckBox();
+        lblRating = new javax.swing.JLabel();
         PanelPencarian = new javax.swing.JPanel();
         lblPencarian = new javax.swing.JLabel();
         txtPencarian = new javax.swing.JTextField();
@@ -609,10 +724,13 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
         btnImport = new javax.swing.JButton();
+        btnTampilSemua = new javax.swing.JButton();
+        btnFilterFavorit = new javax.swing.JButton();
+        btnFilterRating = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel1.setText("APLIKASI RESEP MASAKAN");
 
         javax.swing.GroupLayout PanelJudulLayout = new javax.swing.GroupLayout(PanelJudul);
@@ -620,16 +738,16 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
         PanelJudulLayout.setHorizontalGroup(
             PanelJudulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelJudulLayout.createSequentialGroup()
-                .addContainerGap(232, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(165, 165, 165))
+                .addGap(232, 232, 232))
         );
         PanelJudulLayout.setVerticalGroup(
             PanelJudulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelJudulLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel1)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -690,43 +808,55 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
             }
         });
 
+        SpinnerRating.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+
+        chkFavorit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        chkFavorit.setText("Tandai Sebagai Favorit");
+
+        lblRating.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblRating.setText("Rating (1 - 5)");
+
         javax.swing.GroupLayout PanelResepLayout = new javax.swing.GroupLayout(PanelResep);
         PanelResep.setLayout(PanelResepLayout);
         PanelResepLayout.setHorizontalGroup(
             PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelResepLayout.createSequentialGroup()
                 .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addComponent(txtNamaResep, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2)
                     .addGroup(PanelResepLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtWaktuMasak)
-                                .addComponent(cmbKategori, 0, 174, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1)
+                            .addComponent(jScrollPane2)
                             .addGroup(PanelResepLayout.createSequentialGroup()
-                                .addContainerGap()
                                 .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblBahan, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblLangkah, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)
-                        .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTingkatKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(PanelResepLayout.createSequentialGroup()
-                        .addComponent(btnTambah, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnBersih)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(lblLangkah, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(215, 215, 215))
+                            .addGroup(PanelResepLayout.createSequentialGroup()
+                                .addComponent(btnTambah, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnBersih)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelResepLayout.createSequentialGroup()
+                                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(chkFavorit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(PanelResepLayout.createSequentialGroup()
+                                        .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblWaktuMasak))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(txtWaktuMasak, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cmbKategori, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblTingkatKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbKesulitan, 0, 168, Short.MAX_VALUE)
+                                    .addComponent(SpinnerRating)
+                                    .addComponent(lblRating, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
-            .addGroup(PanelResepLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblWaktuMasak)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelResepLayout.setVerticalGroup(
             PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -740,13 +870,19 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
                     .addComponent(lblKategori)
                     .addComponent(lblTingkatKesulitan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblWaktuMasak)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbKategori, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtWaktuMasak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWaktuMasak)
+                    .addComponent(lblRating))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtWaktuMasak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SpinnerRating, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkFavorit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblBahan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -760,7 +896,7 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
                     .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBersih, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         lblPencarian.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -814,6 +950,30 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
             }
         });
 
+        btnTampilSemua.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnTampilSemua.setText("Tampilkan Semua");
+        btnTampilSemua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTampilSemuaActionPerformed(evt);
+            }
+        });
+
+        btnFilterFavorit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnFilterFavorit.setText("Favorit Saja");
+        btnFilterFavorit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilterFavoritActionPerformed(evt);
+            }
+        });
+
+        btnFilterRating.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnFilterRating.setText("Rating Tinggi");
+        btnFilterRating.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilterRatingActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelPencarianLayout = new javax.swing.GroupLayout(PanelPencarian);
         PanelPencarian.setLayout(PanelPencarianLayout);
         PanelPencarianLayout.setHorizontalGroup(
@@ -822,34 +982,54 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelPencarianLayout.createSequentialGroup()
-                        .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(PanelPencarianLayout.createSequentialGroup()
                         .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPencarianLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(PanelPencarianLayout.createSequentialGroup()
+                                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(PanelPencarianLayout.createSequentialGroup()
+                                        .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE))
+                                    .addGroup(PanelPencarianLayout.createSequentialGroup()
+                                        .addComponent(btnTampilSemua)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnFilterFavorit, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(74, 74, 74)))
+                                .addComponent(btnFilterRating, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPencarianLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(txtPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(120, 120, 120))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPencarianLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblPencarian)
+                .addGap(238, 238, 238))
         );
         PanelPencarianLayout.setVerticalGroup(
             PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelPencarianLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addComponent(lblPencarian)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTampilSemua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnFilterFavorit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnFilterRating, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnHapus)
+                    .addComponent(btnImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnExport))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -857,14 +1037,12 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(PanelJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(PanelResep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(PanelPencarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(PanelJudul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -872,8 +1050,10 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
                 .addComponent(PanelJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PanelResep, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(PanelPencarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(PanelPencarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(PanelResep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -929,6 +1109,19 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
         importFromCSV();
     }//GEN-LAST:event_btnImportActionPerformed
 
+    private void btnTampilSemuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTampilSemuaActionPerformed
+        loadResep();
+    txtPencarian.setText(""); // Clear search field
+    }//GEN-LAST:event_btnTampilSemuaActionPerformed
+
+    private void btnFilterFavoritActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterFavoritActionPerformed
+        filterFavorit();
+    }//GEN-LAST:event_btnFilterFavoritActionPerformed
+
+    private void btnFilterRatingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterRatingActionPerformed
+        filterRatingTertinggi();
+    }//GEN-LAST:event_btnFilterRatingActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -968,12 +1161,17 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     private javax.swing.JPanel PanelJudul;
     private javax.swing.JPanel PanelPencarian;
     private javax.swing.JPanel PanelResep;
+    private javax.swing.JSpinner SpinnerRating;
     private javax.swing.JButton btnBersih;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnExport;
+    private javax.swing.JButton btnFilterFavorit;
+    private javax.swing.JButton btnFilterRating;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnImport;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JButton btnTampilSemua;
+    private javax.swing.JCheckBox chkFavorit;
     private javax.swing.JComboBox<String> cmbKategori;
     private javax.swing.JComboBox<String> cmbKesulitan;
     private javax.swing.JLabel jLabel1;
@@ -985,6 +1183,7 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblKategori;
     private javax.swing.JLabel lblLangkah;
     private javax.swing.JLabel lblPencarian;
+    private javax.swing.JLabel lblRating;
     private javax.swing.JLabel lblTingkatKesulitan;
     private javax.swing.JLabel lblWaktuMasak;
     private javax.swing.JTable tblResep;

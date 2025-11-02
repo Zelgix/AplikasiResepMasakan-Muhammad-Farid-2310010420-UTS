@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResepDAO {
-    // Method untuk mengambil semua data resep
+     // Method untuk mengambil semua data resep
     public List<Resep> getAllResep() throws SQLException {
         List<Resep> resepList = new ArrayList<>();
         String sql = "SELECT * FROM resep";
@@ -27,7 +27,9 @@ public class ResepDAO {
                     rs.getString("bahan"),
                     rs.getString("langkah"),
                     rs.getString("waktu_masak"),
-                    rs.getString("tingkat_kesulitan")
+                    rs.getString("tingkat_kesulitan"),
+                    rs.getInt("rating"),
+                    rs.getInt("is_favorit") == 1
                 );
                 resepList.add(resep);
             }
@@ -37,8 +39,8 @@ public class ResepDAO {
     
     // Method untuk menambahkan resep
     public void addResep(Resep resep) throws SQLException {
-        String sql = "INSERT INTO resep (nama_resep, kategori, bahan, langkah, waktu_masak, tingkat_kesulitan) "
-                   + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO resep (nama_resep, kategori, bahan, langkah, waktu_masak, tingkat_kesulitan, rating, is_favorit) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -48,6 +50,8 @@ public class ResepDAO {
             pstmt.setString(4, resep.getLangkah());
             pstmt.setString(5, resep.getWaktuMasak());
             pstmt.setString(6, resep.getTingkatKesulitan());
+            pstmt.setInt(7, resep.getRating());
+            pstmt.setInt(8, resep.isFavorit() ? 1 : 0);
             pstmt.executeUpdate();
         }
     }
@@ -55,7 +59,7 @@ public class ResepDAO {
     // Method untuk mengupdate resep
     public void updateResep(Resep resep) throws SQLException {
         String sql = "UPDATE resep SET nama_resep = ?, kategori = ?, bahan = ?, "
-                   + "langkah = ?, waktu_masak = ?, tingkat_kesulitan = ? WHERE id = ?";
+                   + "langkah = ?, waktu_masak = ?, tingkat_kesulitan = ?, rating = ?, is_favorit = ? WHERE id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -65,7 +69,9 @@ public class ResepDAO {
             pstmt.setString(4, resep.getLangkah());
             pstmt.setString(5, resep.getWaktuMasak());
             pstmt.setString(6, resep.getTingkatKesulitan());
-            pstmt.setInt(7, resep.getId());
+            pstmt.setInt(7, resep.getRating());
+            pstmt.setInt(8, resep.isFavorit() ? 1 : 0);
+            pstmt.setInt(9, resep.getId());
             pstmt.executeUpdate();
         }
     }
@@ -101,7 +107,63 @@ public class ResepDAO {
                     rs.getString("bahan"),
                     rs.getString("langkah"),
                     rs.getString("waktu_masak"),
-                    rs.getString("tingkat_kesulitan")
+                    rs.getString("tingkat_kesulitan"),
+                    rs.getInt("rating"),
+                    rs.getInt("is_favorit") == 1
+                );
+                resepList.add(resep);
+            }
+        }
+        return resepList;
+    }
+    
+    // BARU: Method untuk mengambil resep favorit
+    public List<Resep> getFavoriteResep() throws SQLException {
+        List<Resep> resepList = new ArrayList<>();
+        String sql = "SELECT * FROM resep WHERE is_favorit = 1";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                Resep resep = new Resep(
+                    rs.getInt("id"),
+                    rs.getString("nama_resep"),
+                    rs.getString("kategori"),
+                    rs.getString("bahan"),
+                    rs.getString("langkah"),
+                    rs.getString("waktu_masak"),
+                    rs.getString("tingkat_kesulitan"),
+                    rs.getInt("rating"),
+                    rs.getInt("is_favorit") == 1
+                );
+                resepList.add(resep);
+            }
+        }
+        return resepList;
+    }
+    
+    // BARU: Method untuk mengambil resep berdasarkan rating tertinggi
+    public List<Resep> getTopRatedResep() throws SQLException {
+        List<Resep> resepList = new ArrayList<>();
+        String sql = "SELECT * FROM resep WHERE rating > 0 ORDER BY rating DESC";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                Resep resep = new Resep(
+                    rs.getInt("id"),
+                    rs.getString("nama_resep"),
+                    rs.getString("kategori"),
+                    rs.getString("bahan"),
+                    rs.getString("langkah"),
+                    rs.getString("waktu_masak"),
+                    rs.getString("tingkat_kesulitan"),
+                    rs.getInt("rating"),
+                    rs.getInt("is_favorit") == 1
                 );
                 resepList.add(resep);
             }
