@@ -25,17 +25,257 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PanelJudul = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        PanelResep = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        lblKategori = new javax.swing.JLabel();
+        lblBahan = new javax.swing.JLabel();
+        lblLangkah = new javax.swing.JLabel();
+        lblWaktuMasak = new javax.swing.JLabel();
+        lblTingkatKesulitan = new javax.swing.JLabel();
+        txtNamaResep = new javax.swing.JTextField();
+        cmbKategori = new javax.swing.JComboBox<>();
+        txtWaktuMasak = new javax.swing.JTextField();
+        cmbKesulitan = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtBahan = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtLangkah = new javax.swing.JTextArea();
+        btnTambah = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnBersih = new javax.swing.JButton();
+        PanelPencarian = new javax.swing.JPanel();
+        lblPencarian = new javax.swing.JLabel();
+        txtPencarian = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        btnHapus = new javax.swing.JButton();
+        btnExport = new javax.swing.JButton();
+        btnImport = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setText("APLIKASI RESEP MASAKAN");
+
+        javax.swing.GroupLayout PanelJudulLayout = new javax.swing.GroupLayout(PanelJudul);
+        PanelJudul.setLayout(PanelJudulLayout);
+        PanelJudulLayout.setHorizontalGroup(
+            PanelJudulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelJudulLayout.createSequentialGroup()
+                .addContainerGap(232, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(165, 165, 165))
+        );
+        PanelJudulLayout.setVerticalGroup(
+            PanelJudulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelJudulLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jLabel1)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Nama Resep");
+
+        lblKategori.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblKategori.setText("Kategori");
+
+        lblBahan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblBahan.setText("Bahan-Bahan");
+
+        lblLangkah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblLangkah.setText("Langkah-Langkah");
+
+        lblWaktuMasak.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblWaktuMasak.setText("Waktu Masak (Menit)");
+
+        lblTingkatKesulitan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTingkatKesulitan.setText("Tingkat Kesulitan");
+
+        cmbKategori.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cmbKategori.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pembuka", "Utama", "Dessert", "Minuman", "Cemilan" }));
+
+        cmbKesulitan.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cmbKesulitan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mudah", "Sedang", "Sulit" }));
+
+        txtBahan.setColumns(20);
+        txtBahan.setLineWrap(true);
+        txtBahan.setRows(5);
+        jScrollPane1.setViewportView(txtBahan);
+
+        txtLangkah.setColumns(20);
+        txtLangkah.setLineWrap(true);
+        txtLangkah.setRows(5);
+        jScrollPane2.setViewportView(txtLangkah);
+
+        btnTambah.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnTambah.setText("TAMBAH");
+
+        btnEdit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnEdit.setText("EDIT");
+
+        btnBersih.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBersih.setText("BERSIHKAN FORM");
+
+        javax.swing.GroupLayout PanelResepLayout = new javax.swing.GroupLayout(PanelResep);
+        PanelResep.setLayout(PanelResepLayout);
+        PanelResepLayout.setHorizontalGroup(
+            PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelResepLayout.createSequentialGroup()
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(txtNamaResep, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(PanelResepLayout.createSequentialGroup()
+                        .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtWaktuMasak)
+                                .addComponent(cmbKategori, 0, 174, Short.MAX_VALUE))
+                            .addGroup(PanelResepLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblBahan, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblLangkah, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(18, 18, 18)
+                        .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTingkatKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(PanelResepLayout.createSequentialGroup()
+                        .addComponent(btnTambah, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBersih)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addGroup(PanelResepLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblWaktuMasak)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        PanelResepLayout.setVerticalGroup(
+            PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelResepLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNamaResep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblKategori)
+                    .addComponent(lblTingkatKesulitan))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbKesulitan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblWaktuMasak)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtWaktuMasak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblBahan)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblLangkah)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBersih, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        lblPencarian.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblPencarian.setText("Pencarian :");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable1);
+
+        btnHapus.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnHapus.setText("HAPUS");
+
+        btnExport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnExport.setText("EXPORT");
+
+        btnImport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnImport.setText("IMPORT");
+
+        javax.swing.GroupLayout PanelPencarianLayout = new javax.swing.GroupLayout(PanelPencarian);
+        PanelPencarian.setLayout(PanelPencarianLayout);
+        PanelPencarianLayout.setHorizontalGroup(
+            PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelPencarianLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelPencarianLayout.createSequentialGroup()
+                        .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtPencarian)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        PanelPencarianLayout.setVerticalGroup(
+            PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelPencarianLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(lblPencarian)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(PanelResep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(PanelPencarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PanelResep, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PanelPencarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -77,5 +317,33 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel PanelJudul;
+    private javax.swing.JPanel PanelPencarian;
+    private javax.swing.JPanel PanelResep;
+    private javax.swing.JButton btnBersih;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnExport;
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnImport;
+    private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox<String> cmbKategori;
+    private javax.swing.JComboBox<String> cmbKesulitan;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblBahan;
+    private javax.swing.JLabel lblKategori;
+    private javax.swing.JLabel lblLangkah;
+    private javax.swing.JLabel lblPencarian;
+    private javax.swing.JLabel lblTingkatKesulitan;
+    private javax.swing.JLabel lblWaktuMasak;
+    private javax.swing.JTextArea txtBahan;
+    private javax.swing.JTextArea txtLangkah;
+    private javax.swing.JTextField txtNamaResep;
+    private javax.swing.JTextField txtPencarian;
+    private javax.swing.JTextField txtWaktuMasak;
     // End of variables declaration//GEN-END:variables
 }
