@@ -493,6 +493,84 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
             }
         }
     }
+    
+    // Helper method untuk escape karakter khusus di CSV
+    private String escapeCSV(String data) {
+        if (data == null) return "";
+        
+        // Jika mengandung koma, newline, atau quote, bungkus dengan quotes
+        if (data.contains(",") || data.contains("\n") || data.contains("\"")) {
+            // Escape quote dengan double quote
+            data = data.replace("\"", "\"\"");
+            return "\"" + data + "\"";
+        }
+        return data;
+    }
+    
+    private void exportToJSON() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan File JSON");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+            "JSON Files", "json"));
+        
+        int userSelection = fileChooser.showSaveDialog(this);
+        
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            
+            if (!fileToSave.getAbsolutePath().endsWith(".json")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".json");
+            }
+            
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
+                List<Resep> resepList = controller.getAllResep();
+                
+                writer.write("{\n");
+                writer.write("  \"resep\": [\n");
+                
+                for (int i = 0; i < resepList.size(); i++) {
+                    Resep resep = resepList.get(i);
+                    writer.write("    {\n");
+                    writer.write("      \"id\": " + resep.getId() + ",\n");
+                    writer.write("      \"nama_resep\": \"" + escapeJSON(resep.getNamaResep()) + "\",\n");
+                    writer.write("      \"kategori\": \"" + escapeJSON(resep.getKategori()) + "\",\n");
+                    writer.write("      \"bahan\": \"" + escapeJSON(resep.getBahan()) + "\",\n");
+                    writer.write("      \"langkah\": \"" + escapeJSON(resep.getLangkah()) + "\",\n");
+                    writer.write("      \"waktu_masak\": \"" + escapeJSON(resep.getWaktuMasak()) + "\",\n");
+                    writer.write("      \"tingkat_kesulitan\": \"" + escapeJSON(resep.getTingkatKesulitan()) + "\"\n");
+                    writer.write("    }");
+                    
+                    if (i < resepList.size() - 1) {
+                        writer.write(",");
+                    }
+                    writer.write("\n");
+                }
+                
+                writer.write("  ]\n");
+                writer.write("}\n");
+                
+                JOptionPane.showMessageDialog(this, 
+                    "Data berhasil diekspor ke:\n" + fileToSave.getAbsolutePath(),
+                    "Ekspor JSON Berhasil", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                    
+            } catch (IOException ex) {
+                showError("Gagal menulis file: " + ex.getMessage());
+            } catch (SQLException ex) {
+                showError("Gagal mengambil data: " + ex.getMessage());
+            }
+        }
+    }
+    
+    // Helper method untuk escape karakter khusus di JSON
+    private String escapeJSON(String data) {
+        if (data == null) return "";
+        return data.replace("\\", "\\\\")
+                   .replace("\"", "\\\"")
+                   .replace("\n", "\\n")
+                   .replace("\r", "\\r")
+                   .replace("\t", "\\t");
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -745,13 +823,16 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
                 .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelPencarianLayout.createSequentialGroup()
                         .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelPencarianLayout.createSequentialGroup()
+                        .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelPencarianLayout.setVerticalGroup(
@@ -826,7 +907,7 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPencarianKeyReleased
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
-        // Tampilkan pilihan format export
+         // Tampilkan pilihan format export
     String[] options = {"CSV", "JSON", "Batal"};
     int choice = JOptionPane.showOptionDialog(this,
         "Pilih format file untuk export:",
@@ -840,26 +921,14 @@ public class PengelolaanResepFrame extends javax.swing.JFrame {
     if (choice == 0) {
         exportToCSV();
     } else if (choice == 1) {
-   }
+        exportToJSON();
+    }
     }//GEN-LAST:event_btnExportActionPerformed
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
         importFromCSV();
     }//GEN-LAST:event_btnImportActionPerformed
 
-    
-    // Helper method untuk escape karakter khusus di CSV
-    private String escapeCSV(String data) {
-        if (data == null) return "";
-        
-        // Jika mengandung koma, newline, atau quote, bungkus dengan quotes
-        if (data.contains(",") || data.contains("\n") || data.contains("\"")) {
-            // Escape quote dengan double quote
-            data = data.replace("\"", "\"\"");
-            return "\"" + data + "\"";
-        }
-        return data;
-    }
     /**
      * @param args the command line arguments
      */
