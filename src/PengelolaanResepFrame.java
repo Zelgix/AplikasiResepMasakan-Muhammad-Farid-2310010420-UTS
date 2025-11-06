@@ -730,6 +730,8 @@ private void filterRatingTertinggi() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        PanelJudul.setBackground(new java.awt.Color(0, 153, 153));
+
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel1.setText("APLIKASI RESEP MASAKAN");
 
@@ -740,7 +742,7 @@ private void filterRatingTertinggi() {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelJudulLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(232, 232, 232))
+                .addGap(221, 221, 221))
         );
         PanelJudulLayout.setVerticalGroup(
             PanelJudulLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -750,22 +752,30 @@ private void filterRatingTertinggi() {
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
+        PanelResep.setBackground(new java.awt.Color(0, 102, 102));
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nama Resep");
 
         lblKategori.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblKategori.setForeground(new java.awt.Color(255, 255, 255));
         lblKategori.setText("Kategori");
 
         lblBahan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblBahan.setForeground(new java.awt.Color(255, 255, 255));
         lblBahan.setText("Bahan-Bahan");
 
         lblLangkah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblLangkah.setForeground(new java.awt.Color(255, 255, 255));
         lblLangkah.setText("Langkah-Langkah");
 
         lblWaktuMasak.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblWaktuMasak.setForeground(new java.awt.Color(255, 255, 255));
         lblWaktuMasak.setText("Waktu Masak (Menit)");
 
         lblTingkatKesulitan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTingkatKesulitan.setForeground(new java.awt.Color(255, 255, 255));
         lblTingkatKesulitan.setText("Tingkat Kesulitan");
 
         cmbKategori.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -784,7 +794,9 @@ private void filterRatingTertinggi() {
         txtLangkah.setRows(5);
         jScrollPane2.setViewportView(txtLangkah);
 
+        btnTambah.setBackground(new java.awt.Color(0, 0, 153));
         btnTambah.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnTambah.setForeground(new java.awt.Color(255, 255, 255));
         btnTambah.setText("TAMBAH");
         btnTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -811,9 +823,11 @@ private void filterRatingTertinggi() {
         SpinnerRating.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
 
         chkFavorit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        chkFavorit.setForeground(new java.awt.Color(255, 255, 255));
         chkFavorit.setText("Tandai Sebagai Favorit");
 
         lblRating.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblRating.setForeground(new java.awt.Color(255, 255, 255));
         lblRating.setText("Rating (1 - 5)");
 
         javax.swing.GroupLayout PanelResepLayout = new javax.swing.GroupLayout(PanelResep);
@@ -892,14 +906,18 @@ private void filterRatingTertinggi() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBersih, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelResepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBersih, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
+        PanelPencarian.setBackground(new java.awt.Color(0, 102, 102));
+
         lblPencarian.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblPencarian.setForeground(new java.awt.Color(255, 255, 255));
         lblPencarian.setText("Pencarian :");
 
         txtPencarian.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -926,7 +944,9 @@ private void filterRatingTertinggi() {
         });
         jScrollPane3.setViewportView(tblResep);
 
+        btnHapus.setBackground(new java.awt.Color(153, 0, 0));
         btnHapus.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 255, 255));
         btnHapus.setText("HAPUS");
         btnHapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -934,6 +954,7 @@ private void filterRatingTertinggi() {
             }
         });
 
+        btnExport.setBackground(new java.awt.Color(0, 153, 0));
         btnExport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnExport.setText("EXPORT");
         btnExport.addActionListener(new java.awt.event.ActionListener() {
@@ -942,6 +963,7 @@ private void filterRatingTertinggi() {
             }
         });
 
+        btnImport.setBackground(new java.awt.Color(204, 204, 0));
         btnImport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnImport.setText("IMPORT");
         btnImport.addActionListener(new java.awt.event.ActionListener() {
@@ -950,6 +972,7 @@ private void filterRatingTertinggi() {
             }
         });
 
+        btnTampilSemua.setBackground(new java.awt.Color(153, 153, 153));
         btnTampilSemua.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnTampilSemua.setText("Tampilkan Semua");
         btnTampilSemua.addActionListener(new java.awt.event.ActionListener() {
@@ -958,6 +981,7 @@ private void filterRatingTertinggi() {
             }
         });
 
+        btnFilterFavorit.setBackground(new java.awt.Color(153, 153, 153));
         btnFilterFavorit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnFilterFavorit.setText("Favorit Saja");
         btnFilterFavorit.addActionListener(new java.awt.event.ActionListener() {
@@ -966,7 +990,9 @@ private void filterRatingTertinggi() {
             }
         });
 
+        btnFilterRating.setBackground(new java.awt.Color(153, 153, 153));
         btnFilterRating.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnFilterRating.setForeground(new java.awt.Color(0, 0, 0));
         btnFilterRating.setText("Rating Tinggi");
         btnFilterRating.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -988,18 +1014,16 @@ private void filterRatingTertinggi() {
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btnImport, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(PanelPencarianLayout.createSequentialGroup()
-                                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(PanelPencarianLayout.createSequentialGroup()
-                                        .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE))
-                                    .addGroup(PanelPencarianLayout.createSequentialGroup()
-                                        .addComponent(btnTampilSemua)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnFilterFavorit, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(74, 74, 74)))
-                                .addComponent(btnFilterRating, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                                .addComponent(btnFilterRating, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(PanelPencarianLayout.createSequentialGroup()
+                                .addComponent(btnTampilSemua)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnFilterFavorit, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(198, 198, 198)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPencarianLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1025,10 +1049,11 @@ private void filterRatingTertinggi() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnHapus)
+                .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnExport))
+                    .addGroup(PanelPencarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnHapus)
+                        .addComponent(btnExport)))
                 .addContainerGap())
         );
 
